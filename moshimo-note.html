@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>もしもノート ☁️ ふわまると</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg1: #EAF4FB;
+    --bg2: #FDFEFF;
+    --card: #FFFFFF;
+    --text: #4A5B68;
+    --sub: #93A7B6;
+    --accent: #7FBCE0;
+    --accent-deep: #5FA6D0;
+    --soft: #E6F2FB;
+    --pink: #F2A7BB;
+    --pink-soft: #FBE9EF;
+    --shadow: 0 8px 28px rgba(111,181,222,0.20);
+    --radius: 26px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Zen Maru Gothic','Hiragino Maru Gothic ProN','BIZ UDGothic',sans-serif;
+    background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 65%);
+    min-height: 100vh;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 26px 16px 110px;
+  }
+  .wrap { width: 100%; max-width: 400px; }
+  h1 { font-size: 19px; font-weight: 700; text-align: center; margin: 0 0 2px; }
+  .tagline { text-align: center; font-size: 12.5px; color: var(--sub); margin: 0 0 18px; }
+  .fuwa-wrap { text-align: center; }
+  .floaty { display: inline-block; animation: floaty 3.4s ease-in-out infinite; }
+  @keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+  @media (prefers-reduced-motion: reduce){ .floaty{animation:none} }
+
+  .bubble {
+    background: var(--soft);
+    border-radius: 20px;
+    padding: 14px 18px;
+    font-size: 14.5px;
+    line-height: 1.75;
+    position: relative;
+    display: inline-block;
+    max-width: 320px;
+    margin: 6px auto 0;
+    text-align: left;
+  }
+  .bubble::after {
+    content: "";
+    position: absolute; top: -7px; left: 50%; transform: translateX(-50%) rotate(45deg);
+    width: 14px; height: 14px; background: var(--soft); border-radius: 3px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 22px 20px;
+    margin-top: 18px;
+  }
+  label.field { display:block; font-size: 13.5px; font-weight: 700; margin: 14px 0 6px; }
+  .hint { font-size: 11.5px; color: var(--sub); font-weight: 400; margin-left: 2px; }
+  textarea, input[type=text] {
+    width: 100%;
+    border: 2px solid var(--soft);
+    border-radius: 16px;
+    padding: 13px 14px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    background: #fff;
+    resize: none;
+  }
+  textarea:focus, input:focus { border-color: var(--accent); }
+  textarea { min-height: 70px; }
+  .q-special {
+    background: var(--pink-soft);
+    border-radius: 18px;
+    padding: 14px 16px;
+    margin-top: 18px;
+  }
+  .q-special .q-label {
+    font-size: 15px; font-weight: 700; color: #D77B95; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .q-special textarea { border-color: var(--pink-soft); }
+  .q-special textarea:focus { border-color: var(--pink); }
+  button {
+    font-family: inherit; cursor: pointer; border: none;
+  }
+  .btn-primary {
+    width: 100%; border-radius: 20px; padding: 15px;
+    font-size: 16px; font-weight: 700; color: #fff;
+    background: var(--accent); box-shadow: var(--shadow); margin-top: 18px;
+    transition: transform .08s ease, background .2s;
+  }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { background: #C9DCE8; box-shadow:none; cursor: default; }
+  .btn-ghost {
+    background: none; color: var(--sub); font-size: 13px;
+    text-decoration: underline; padding: 6px;
+  }
+  .nav {
+    position: fixed; bottom: 16px; left: 0; right: 0;
+    display: flex; justify-content: center; gap: 10px;
+  }
+  .nav button {
+    background: var(--card); color: var(--text);
+    border-radius: 999px; padding: 11px 22px;
+    font-size: 14px; font-weight: 700; box-shadow: var(--shadow);
+  }
+  .nav button.active { background: var(--accent); color: #fff; }
+  .entry {
+    background: var(--soft); border-radius: 18px;
+    padding: 13px 15px; margin-bottom: 11px; font-size: 14px; line-height: 1.7;
+  }
+  .entry .date { font-size: 11px; color: var(--sub); margin-bottom: 5px; }
+  .entry .moshimo { color: #D77B95; font-weight: 500; margin-top: 4px; }
+  .entry .moshimo::before { content: "🌸 "; }
+  .empty { color: var(--sub); font-size: 14px; text-align:center; padding: 20px 0; line-height: 1.8; }
+  .center { text-align: center; }
+  .done-emoji { font-size: 13px; color: var(--sub); margin-top: 6px; }
+  details { margin-top: 16px; }
+  summary { font-size: 12px; color: var(--sub); cursor: pointer; text-align:center; list-style: none; }
+  summary::-webkit-details-marker { display:none; }
+  .back-btn { background:none; font-size: 18px; color: var(--sub); margin-right: 6px; padding: 0 4px; }
+  .card-head { display:flex; align-items:center; margin-bottom: 6px; }
+  .card-head h2 { margin:0; font-size: 17px; }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<div class="nav" id="nav"></div>
+
+<script>
+/* =========================================================
+   もしもノート — ふわまるの「後悔」バージョン
+   小さな後悔を書く → 「本当はどうしたかった?」を書く
+   AIなし / localStorage保存 / 単一ファイルでどこでも動く
+   ========================================================= */
+
+var STORAGE_KEY = "moshimo-note-data-v1";
+
+/* ---------- データ ---------- */
+function loadData() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return { entries: [] };
+    var d = JSON.parse(raw);
+    if (!d.entries) d.entries = [];
+    return d;
+  } catch (e) {
+    return { entries: [] };
+  }
+}
+function saveData(data) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+var data = loadData();
+var screen = "write"; // write | list
+
+/* ---------- ふわまる(雲うさぎ SVG) ---------- */
+function fuwamaru(mood, size) {
+  mood = mood || "normal";
+  size = size || 120;
+  var eyes;
+  if (mood === "soft") {
+    eyes = '<path d="M44 52 q5 4 10 0" stroke="#5A6B78" stroke-width="2.5" fill="none" stroke-linecap="round"/>'
+         + '<path d="M66 52 q5 4 10 0" stroke="#5A6B78" stroke-width="2.5" fill="none" stroke-linecap="round"/>';
+  } else if (mood === "smile") {
+    eyes = '<path d="M44 50 q5 -5 10 0" stroke="#5A6B78" stroke-width="2.5" fill="none" stroke-linecap="round"/>'
+         + '<path d="M66 50 q5 -5 10 0" stroke="#5A6B78" stroke-width="2.5" fill="none" stroke-linecap="round"/>';
+  } else {
+    eyes = '<circle cx="49" cy="51" r="3.2" fill="#5A6B78"/><circle cx="71" cy="51" r="3.2" fill="#5A6B78"/>';
+  }
+  var mouth = (mood === "smile")
+    ? '<path d="M54 60 q6 7 12 0" stroke="#E08CA2" stroke-width="2.5" fill="none" stroke-linecap="round"/>'
+    : '<path d="M56 60 q4 4 8 0" stroke="#E08CA2" stroke-width="2" fill="none" stroke-linecap="round"/>';
+  return ''
+  + '<svg width="'+size+'" height="'+size+'" viewBox="0 0 120 110" aria-label="ふわまる">'
+  + '<ellipse cx="42" cy="22" rx="10" ry="17" fill="#fff" stroke="#DCE9F2" stroke-width="2"/>'
+  + '<ellipse cx="78" cy="22" rx="10" ry="17" fill="#fff" stroke="#DCE9F2" stroke-width="2"/>'
+  + '<ellipse cx="42" cy="24" rx="5" ry="10" fill="#F8DCE4"/>'
+  + '<ellipse cx="78" cy="24" rx="5" ry="10" fill="#F8DCE4"/>'
+  + '<path d="M60 18 C84 18 102 32 102 56 C110 58 112 70 104 74 C104 92 86 102 60 102 C34 102 16 92 16 74 C8 70 10 58 18 56 C18 32 36 18 60 18 Z" fill="#fff" stroke="#DCE9F2" stroke-width="2"/>'
+  + '<text x="54" y="38" font-size="11" fill="#F5C97B">★</text>'
+  + eyes + mouth
+  + '<ellipse cx="38" cy="60" rx="6" ry="4" fill="#F8C9D5"/>'
+  + '<ellipse cx="82" cy="60" rx="6" ry="4" fill="#F8C9D5"/>'
+  + '<ellipse cx="30" cy="86" rx="8" ry="6" fill="#fff" stroke="#DCE9F2" stroke-width="2"/>'
+  + '<ellipse cx="90" cy="86" rx="8" ry="6" fill="#fff" stroke="#DCE9F2" stroke-width="2"/>'
+  + '</svg>';
+}
+
+/* ---------- 画面描画 ---------- */
+var app = document.getElementById("app");
+var nav = document.getElementById("nav");
+
+function render() {
+  if (screen === "write") renderWrite();
+  else renderList();
+  renderNav();
+}
+
+/* 書く画面 */
+function renderWrite() {
+  app.innerHTML = ''
+  + '<h1>もしもノート</h1>'
+  + '<p class="tagline">ちいさな「もしも」を、のこそう☁️</p>'
+  + '<div class="fuwa-wrap"><span class="floaty">'+fuwamaru("normal",132)+'</span>'
+  + '<div class="bubble">きょうの「こうしたかった」を 探してみよう🔍 ちいさなことでいいんだよ☁️</div></div>'
+  + '<div class="card">'
+  + '  <div class="card-head"><h2>☁️ きょうの もしも</h2></div>'
+  + '  <label class="field">なにが あったの? <span class="hint">(後悔したこと)</span></label>'
+  + '  <textarea id="regret" placeholder=""></textarea>'
+  + '  <div class="q-special">'
+  + '    <div class="q-label">🌸 ほんとうは どうしたかった?</div>'
+  + '    <textarea id="wish" placeholder=""></textarea>'
+  + '  </div>'
+  + '  <button class="btn-primary" id="saveBtn" disabled>そっと のこす</button>'
+  + '</div>';
+
+  var regret = document.getElementById("regret");
+  var wish = document.getElementById("wish");
+  var btn = document.getElementById("saveBtn");
+  function check() {
+    btn.disabled = !(regret.value.trim() || wish.value.trim());
+  }
+  regret.addEventListener("input", check);
+  wish.addEventListener("input", check);
+  btn.addEventListener("click", function () {
+    data.entries.unshift({
+      id: Date.now(),
+      date: new Date().toISOString(),
+      regret: regret.value.trim(),
+      wish: wish.value.trim()
+    });
+    saveData(data);
+    renderDone();
+  });
+}
+
+/* 保存完了画面 */
+function renderDone() {
+  app.innerHTML = ''
+  + '<div class="card center">'
+  + '  <span class="floaty">'+fuwamaru("smile",132)+'</span>'
+  + '  <div class="bubble" style="display:block;margin-top:10px;">'
+  + '    かいてくれて ありがとう。<br>'
+  + '    「ほんとうは どうしたかった?」が わかってるきみは、'
+  + 'もう つぎへ あるきはじめてるよ🌸</div>'
+  + '  <button class="btn-primary" id="toWrite">もう ひとつ かく</button>'
+  + '  <button class="btn-ghost" id="toList">のこした もしもを みる</button>'
+  + '</div>';
+  document.getElementById("toWrite").addEventListener("click", function(){ screen="write"; render(); });
+  document.getElementById("toList").addEventListener("click", function(){ screen="list"; render(); });
+}
+
+/* 一覧画面 */
+function renderList() {
+  var items = "";
+  if (data.entries.length === 0) {
+    items = '<div class="empty">まだ なにもないよ。<br>ちいさな「もしも」から、はじめてみよう☁️</div>';
+  } else {
+    for (var i = 0; i < data.entries.length; i++) {
+      var e = data.entries[i];
+      var d = new Date(e.date);
+      var ds = (d.getMonth()+1) + "月" + d.getDate() + "日";
+      items += '<div class="entry">'
+        + '<div class="date">'+ds+'</div>'
+        + (e.regret ? '<div>'+escapeHtml(e.regret)+'</div>' : '')
+        + (e.wish ? '<div class="moshimo">'+escapeHtml(e.wish)+'</div>' : '')
+        + '</div>';
+    }
+  }
+  app.innerHTML = ''
+  + '<div class="card">'
+  + '  <div class="card-head"><h2>📖 のこした もしも</h2></div>'
+  + items
+  + '  <details><summary>⚙️ バックアップ・ふくげん</summary>'
+  + '    <p class="hint" style="margin:10px 0 4px;">↓ぜんぶ コピーして、メモに のこせるよ</p>'
+  + '    <textarea id="exp" readonly style="height:60px;font-size:11px;">'+escapeHtml(JSON.stringify(data))+'</textarea>'
+  + '    <p class="hint" style="margin:10px 0 4px;">↓もどすときは ここに はって「よみこむ」</p>'
+  + '    <textarea id="imp" placeholder="{...}" style="height:50px;font-size:11px;"></textarea>'
+  + '    <button class="btn-ghost" id="impBtn">よみこむ</button>'
+  + '    <span id="impMsg" class="hint"></span>'
+  + '  </details>'
+  + '</div>';
+
+  var exp = document.getElementById("exp");
+  if (exp) exp.addEventListener("focus", function(){ this.select(); });
+  var impBtn = document.getElementById("impBtn");
+  if (impBtn) impBtn.addEventListener("click", function(){
+    var msg = document.getElementById("impMsg");
+    try {
+      var parsed = JSON.parse(document.getElementById("imp").value);
+      if (!parsed || !Array.isArray(parsed.entries)) throw new Error();
+      data = parsed; saveData(data); render();
+    } catch (e) {
+      msg.textContent = " よみこめなかった…";
+    }
+  });
+}
+
+function renderNav() {
+  nav.innerHTML = ''
+  + '<button id="navWrite" class="'+(screen==="write"?"active":"")+'">✏️ かく</button>'
+  + '<button id="navList" class="'+(screen==="list"?"active":"")+'">📖 みる</button>';
+  document.getElementById("navWrite").addEventListener("click", function(){ screen="write"; render(); });
+  document.getElementById("navList").addEventListener("click", function(){ screen="list"; render(); });
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+render();
+</script>
+</body>
+</html>
